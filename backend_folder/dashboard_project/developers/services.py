@@ -1,9 +1,7 @@
 import httpx
-import asyncio
 import os
 from dotenv import load_dotenv
 load_dotenv()
-
 GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
 BASE_URL = "https://api.github.com"
 HEADERS = {
@@ -14,6 +12,7 @@ HEADERS = {
 username = 'microsoft'
 repo = 'vscode'
 repo_list = []
+
 async def request_user(username):
     async with httpx.AsyncClient() as client:
         response = await client.get(
@@ -56,13 +55,6 @@ async def request_repo(username):
         response.raise_for_status()
         return response.json()
 
-def get_repo_name(username): 
-    repo_list = []
-    repos = asyncio.run(request_repo(username))
-    for repo in repos:
-            repo_list.append(repo['name'])
-    return repo_list
-
 async def request_repo_info(username, repo): 
     async with httpx.AsyncClient() as client:
          response = await client.get(
@@ -71,8 +63,6 @@ async def request_repo_info(username, repo):
          )
          response.raise_for_status()
          return response.json()
-
-
 
 async def request_repo_languages(username, repo):
     async with httpx.AsyncClient() as client:
@@ -145,83 +135,12 @@ async def issues(username, repo):
             if "pull_request" not in issue
         ]
     
-def merged_percentage(username, repo):
-    info = asyncio.run(pull_info(username, repo))
-    if not info:
-        return "N/A"
-    total_prs = len(info)
-    merged_prs = sum(
-        1 for pr in info
-        if pr["merged_at"] is not None
-    )
-    return (merged_prs / total_prs) * 100
-#print(merged_percentage('python', 'cpython')) 
 
 
-def forks(username, repo):
-    info = asyncio.run(request_repo_info(username, repo))
-    return info.get('forks')
-
-def creation_date(username, repo):
-    info = asyncio.run(request_repo_info(username, repo))
-    return info.get('created_at')
-    #coordinated universal time, may have to convert to date time
-def stars(username, repo):
-    info = asyncio.run(request_repo_info(username, repo))
-    return info.get('stargazers_count')
-def last_updated(username, repo):
-    info = asyncio.run(request_repo_info(username, repo))
-    return info.get('updated_at')
-    #coordinated universal time, may have to convert to date time
-
-def total_issues_opened(username, repo):
-    issue_data = asyncio.run(issues(username, repo))
-    return len(issue_data)
 
 
-def open_issues(username, repo):
-    issue_data = asyncio.run(issues(username, repo))
-    return sum(
-        1
-        for issue in issue_data
-        if issue["state"] == "open"
-    )
 
-
-def closed_issues(username, repo):
-    issue_data = asyncio.run(issues(username, repo))
-    return sum(
-        1
-        for issue in issue_data
-        if issue["state"] == "closed"
-    )
-
-def issue_close_rate(username, repo):
-    issue_data = asyncio.run(issues(username, repo))
-    total = len(issue_data)
-    if total == 0:
-        return 0
-    closed = sum(
-        1
-        for issue in issue_data
-        if issue["state"] == "closed"
-    )
-    term = f'{int((closed/total) * 100)}%'
-    return term
-def most_starred_repos():
-    stars_dict = {}
-    total = len()
-
-
-def most_used_languages(username):
-    """
-    dict(total sum for each language = 0)
-    for each repo
-        add language usage to total sum
     
-    """
-
-
 
 # Test Functions
 
@@ -233,8 +152,6 @@ def most_used_languages(username):
 #     print("Name:", user_info.get("name"))
 #     print("Public Repos:", user_info.get("public_repos"))
 #     print("Followers:", user_info.get("followers"))
-user_info = request_user("torvalds")
-print(user_info.get("avatar_url"))
 
     # print("\n========== REPOSITORY INFO ==========")
     # print("Repository Names:")
