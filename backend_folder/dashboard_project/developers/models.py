@@ -7,6 +7,8 @@ class Profile(models.Model):
     profile_readme = models.TextField(blank=True)
     bio = models.TextField(blank=True)
     account_age = models.DateTimeField(auto_now=True)
+    account_age = models.DateTimeField(auto_now=True)
+    tech_stack = models.JSONField(default=list, blank=True)
     #latest_repos
     
 class MetricData(models.Model):
