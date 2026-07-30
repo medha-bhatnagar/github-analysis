@@ -16,7 +16,7 @@ class MetricData(models.Model):
     issue_resolution = models.CharField(max_length=255, blank=True)
     pr_resolution = models.CharField(max_length=255, blank=True)
     commit_frequency = models.CharField(max_length=255, blank=True)
-    #most_starred_repos = models.JSONField(default=list)
+    #top_3_starred_repos = models.JSONField(default=list)
     #repo_quality_score = models.IntegerField(null=True)
     
 class FileData(models.Model):
