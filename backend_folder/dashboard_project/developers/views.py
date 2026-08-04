@@ -37,20 +37,37 @@ from .analytics import(
 )
 
 async def analyze_profile(request, username):
+    save_profile = sync_to_async(Profile.objects.update_or_create)
     bio = await get_bio(username) or ""
     name = await display_name(username) or ""
     pic = await profile_pic(username) or ""
-    save_profile = sync_to_async(Profile.objects.update_or_create)
     languages = await top_languages(username)
     stack = await detect_tech_stack(username)
     tech_stack = [lang["language"] for lang in languages if lang["language"]] + stack
+    account_age = await account_creation(username)
+    profile_text_readme = await profile_readme(username) or ""
+    username = await display_username(username)
+
     profile, _ = await save_profile(
         username=username,
         defaults={
-            "full_name": name,
-            "bio": bio,
             "profile_image": pic,
+            "full_name": name,
+            "username": username,
+            "profile_readme": profile_text_readme,
+            "bio": bio,
+            "account_age": account_age,
             "tech_stack": tech_stack
         }
     )
-    return JsonResponse({"bio": bio, "name": name, "tech_stack": tech_stack, "saved": True})
+    data = {    "profile_image": pic, 
+                "full_name": name, 
+                "username": username,
+                "profile_readme": profile_text_readme,
+                "bio": bio, 
+                "account_age": account_age, 
+                "tech_stack": tech_stack, 
+                "saved": True}
+
+
+    return JsonResponse(data)

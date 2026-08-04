@@ -3,11 +3,10 @@ from django.db import models
 class Profile(models.Model):
     profile_image = models.URLField(blank=True)
     full_name = models.CharField(max_length=255, blank=True)
-    username = models.CharField(max_length=255, blank=True)
+    username = models.CharField(max_length=255)
     profile_readme = models.TextField(blank=True)
     bio = models.TextField(blank=True)
-    account_age = models.DateTimeField(auto_now=True)
-    account_age = models.DateTimeField(auto_now=True)
+    account_age = models.DateTimeField(blank=True)
     tech_stack = models.JSONField(default=list, blank=True)
     #latest_repos
     

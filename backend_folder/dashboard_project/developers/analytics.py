@@ -126,7 +126,11 @@ async def get_bio(username):
 
 async def account_creation(username):
     info = await request_user(username)
-    return info.get("created_at")
+    account_age = info.get("created_at")
+    if account_age:
+        account_age = datetime.fromisoformat(
+        account_age.replace("Z", "+00:00"))
+    return account_age
 
 async def top_languages(username):
     repos = await request_repo(username)
